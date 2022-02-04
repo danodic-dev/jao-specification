@@ -61,8 +61,6 @@ Defining the visual behaviour of UI components outside of your code can help wit
 - Allow for the development and test of the visual behavior of UI components before integrating them into your code, leading to a quick develop-test-fix cycle;
 - Preview & tweaking of the UI of a game without having to run the game by using a visual editor/visualizer.
 
-Menus & Gameplay graphics have extensively used the JAO library. Every graphical component (except by the widgets in the settings screen) have been drawn and animated using JAO files (even music/sound is played back and defined inside the JAO files).
-
 <a name="file"/></a>
 # Specification - File Format
 A jao file follows this structure:
@@ -873,3 +871,5 @@ The main reason why that was developed for Rushbeat was the development of menus
 Here is an example of what the UI of Rushbeat looks like:
 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=iVOMaDSx6Us" target="_blank"><img src="http://img.youtube.com/vi/iVOMaDSx6Us/0.jpg" alt="Rushbeat Gameplay" width="400" height="240" border="10" /></a>
+
+Menus & Gameplay graphics have extensively used the JAO library. Every graphical component (except by the widgets in the settings screen) have been drawn and animated using JAO files (even music/sound is played back and defined inside the JAO files).
