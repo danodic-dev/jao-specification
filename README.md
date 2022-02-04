@@ -258,5 +258,72 @@ As it happens with events, there are special types of actions for the `initializ
 While it is expected that the regular actions will execute actions interpolated across a given amount of time (more below), `initialize` actions will be executed imediately, right when the jao file is loaded (or when it is reset).
 
 # Initialization and Reset
+It is expected that the jao object will execute all of its initialize events before other events are triggered. When *exactly* it happens is up to the implementation. 
+
+When an event is triggered, it is expected that a timer (or clock) will be attached to this event, so that the actions listed inside this event are executed across the time by following the time expressions inside the `when` field. It is also expected that the implementation allows a jao object to be *reset*. By reseting it means this:
+- All actions inside the `initialize` event are executed.
+- The event clock will be reset to 0 (ex.: actions with `when` set to 0 will run again).
+
+## Problems with Reset
+It is expected that for some workflows it will be inconvenient to execute the `initialize` event actions again when the object is reset. In such cases, it is advisable to add an attribute in the `dataType` that will define if the element is resetable:
+```
+"dataType": {
+   "type": "...",
+   "attributes": {
+      "resetable": false
+   }
+}
+```
+The code of each action can look at this attribute and decide if it should reset or not when asked to do it so.
+
 # Time Expressions
+Time-based fields are expected to suport time expressions:
+```
+<type of time> <number>
+```
+
+`<type of time>` is expected to accept at least `second` as a value and it should accept a floating point number as a `<number>` (ex.: `4.2`). Some examples of other (probably) valid values:
+- `second 0`
+- `minute 1`
+- `second 2.5`
+- `milisecond 200`
+- `frame 10`
+
+Those expressions are provided as strings inside the JSON:
+```
+{
+   "library": "...",
+   "name": "...",
+   "when": "second 0",
+   "atributes": {
+      ...
+   }
+}
+```
+
+Whether the implementation will support an specific type of time or not is up to the developer. At least `second` has to be supported.
+
 # Interpolation parameters
+It is expected that actions will most times execute over a time period. For that reason, most actions may have an attribute `duration`. This is an example:
+```
+{
+    "library": "jao.standards",
+    "name": "FadeOverTime",
+    "when": "second 2.76",
+    "attributes": {
+        "start_opacity": "1",
+        "end_opacity": "0",
+        "duration": "seconds 4.62"
+    }
+}
+```
+Fields other than `when` that define time (like the `duration` in the example above) are expected to support time expressions as well.
+
+# Real-Time vs. Frame-Based
+The jao specification does not define if the implementation of the library is done using real-time (using threads, for example) or are frame-based (calling the render routine every cycle). Still, interms of *behavior*, it is expected that a *second means a second* when it runs. You can add frame-based timing to your implementation using time expressions that define duration in frames, but it is expected that you can define durations and start/end times as seconds of fractions/multiples of seconds.
+
+# Examples
+# Implementation Example
+# FAQ
+### Why not YAML?
+Because then it would be called *yao*, which does not sound as good as *jao*.
