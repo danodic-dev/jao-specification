@@ -8,6 +8,7 @@ JAO stands for Json Animated Objects. It is a specification for defining event-d
 
 # Table of Contents
 - [What is JAO?](#what)
+- [How it works](#howworks)
 - [Why?](#why)
 - [Specification - File Format](#file)
   - [Specification - JSON file](#json)
@@ -31,6 +32,27 @@ JAO stands for Json Animated Objects. It is a specification for defining event-d
 - [FAQ](#faq)
 - [Use Case: Rushbeat](#usecase)
 
+<a name="howworks"/></a>
+# How it works
+Consider the following UI component from a game menu:
+
+![example](https://user-images.githubusercontent.com/6846892/152474221-be3966b1-66a5-43f3-92fb-03fb9de99753.png)
+
+You may want it to have a few animations that are triggered when events happen. An example is when the screen is loaded:
+
+![example1](https://user-images.githubusercontent.com/6846892/152474515-5b574e3e-b840-41f0-8819-410640cb594b.gif)
+
+Then, you may want to have an animation triggered when you select the component
+
+![example2](https://user-images.githubusercontent.com/6846892/152474666-3dfc1d63-b468-4002-9bc6-ac81e5b4b951.gif)
+
+Finally, an animation when the item is unselected:
+
+![example3](https://user-images.githubusercontent.com/6846892/152474742-34cc7cc2-faf8-44aa-8a2a-0bf12abf125e.gif)
+
+Usually, you may need to use animation tools to create such animations or write a lot of code to create more complex animations. The JAO file format aims at the creation of such UI component animation items reducing the amount of code used and allowing for reusability of those components.
+
+All animations you have seen above are a single jao file with three events (init, select, unselect) and 8 layers (7 images and one sound sample you will not hear here).
 
 <a name="why"/></a>
 # Why?
