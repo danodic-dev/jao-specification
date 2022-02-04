@@ -35,7 +35,36 @@ root
 3. You can have files (like images) at either the root folder or inside nested folders. All paths inside the `.jao` file are relative to the root folder.
 
 **Notes**:
-- For production usage, it is better to use the `.jao` file. The folder is useful for development, when you are tweaking the component.
+- For production usage, it is better to use the `.jao` file. The filesystem folder is useful for development, when you are tweaking the component.
 - The file formats for the resources inside the `.jao` file do not have an specified type. The supported types are dependent on the implementation.
 
 # Specification - JSON file
+The file `jao.json` will be a plain JSON file, following this format (schema to be defined):
+```
+{
+   "layers": [
+      {
+         "dataType": {
+            "type": "...",
+            "attributes": {
+               "sampleAttr": "...",
+               ...
+            }
+         },
+         "events": [
+            {
+               "name": "initialize",
+               "actions": [
+                  "library": "...",
+                  "name": "...",
+                  ...
+               ]
+            },
+            ...
+         ]
+      },
+      ...
+   ]
+}
+```
+You can see above a brief example of what a `jao.json` looks like.
