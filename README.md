@@ -1,9 +1,38 @@
 # jao-specification
 The specification for the jao file format.
 
+
+<a name="what"/></a>
 # What is JAO?
 JAO stands for Json Animated Objects. It is a specification for defining event-driven, animated UI components using a JSON file. This specification was created initially for use in game development, but can probably be used for other purposes.
 
+# Table of Contents
+- [What is JAO?](#what)
+- [Why?](#why)
+- [Specification - File Format](#file)
+  - [Specification - JSON file](#json)
+  - [Layers](#layers)
+  - [Layer](#layer)
+  - [Data Type Specification](#datatype)
+  - [Events](#events)
+  - [Event](#event)
+  - [The `initialize` event](#initialize)
+  - [Action](#action)
+    - [Action Libraries](#actionlib)
+    - [The `when` field](#whenfield)
+    - [`initialize` actions](#initializeaction)
+- [Initialization and Reset](#initreset)
+  - [Problems with Reset](#probreset)
+- [Time Expressions](#timeexp)
+- [Interpolation parameters](#interpolation)
+- [Displaying text](#text)
+- [Real-Time vs. Frame-Based](#reatimeframebased)
+- [Examples](#examples)
+- [FAQ](#faq)
+- [Use Case: Rushbeat](#usecase)
+
+
+<a name="why"/></a>
 # Why?
 Defining the visual behaviour of UI components outside of your code can help with a few things:
 - Decouple the logical behavior (code & logic) from the visual behavior (graphics & animation) of the UI component;
@@ -12,6 +41,7 @@ Defining the visual behaviour of UI components outside of your code can help wit
 
 Menus & Gameplay graphics have extensively used the JAO library. Every graphical component (except by the widgets in the settings screen) have been drawn and animated using JAO files (even music/sound is played back and defined inside the JAO files).
 
+<a name="file"/></a>
 # Specification - File Format
 A jao file follows this structure:
 ```
@@ -30,6 +60,7 @@ root
 - For production usage, it is better to use the `.jao` file. The filesystem folder is useful for development, when you are tweaking the component.
 - The file formats for the resources inside the `.jao` file do not have an specified type. The supported types are dependent on the implementation.
 
+<a name="json"/></a>
 # Specification - JSON file
 The file `jao.json` will be a plain JSON file, following this format (schema to be defined):
 ```
@@ -63,6 +94,7 @@ The file `jao.json` will be a plain JSON file, following this format (schema to 
 ```
 You can see above a brief example of what a `jao.json` looks like.
 
+<a name="layers"/></a>
 ## Layers
 The jao file is organized in layers. Each layer is some kind of element in your animation (ex.: a `.png` image). You can have zero or more layers in your jao file.
 ```
@@ -93,6 +125,7 @@ The jao file is organized in layers. Each layer is some kind of element in your 
 ]
 ```
 
+<a name="layer"/></a>
 ## Layer
 The layer is this object inside the `"layers"` list:
 ```
@@ -121,7 +154,8 @@ The layer is this object inside the `"layers"` list:
 ```
 A layer is composed by a data type specification and a list of events. Layers are rendered from the first (bottom) to the last (top).
 
-### Data Type Specification
+<a name="datatype"/></a>
+### Data Type
 ```
 "dataType": {
    "type": "...",
@@ -136,6 +170,7 @@ Each layer inside the list of layers has to represent soem kind of entity. An ex
 
 Also, a data type specification can carry a list of attributes to define the overall behavior of a data type. For example, if your data type is something that carries an image (like a `sprite` or `animation`), you may want an attribute to define the file path of the file to be used (see examples below). The defition of attributes is up to the implementation, there is no standard or specification about it.
 
+<a name="events"/></a>
 ### Events
 Each layer carries a list of events, it can have zero or more events in this list.
 ```
@@ -163,7 +198,7 @@ Each layer carries a list of events, it can have zero or more events in this lis
    ...
 ]
 ```
-
+<a name="event"/></a>
 ### Event
 ```
 {
@@ -185,6 +220,7 @@ The event will describe *what* happens when this event is triggered, which is a 
 
 As each layer has a list of events, if you want to have multiple layers reacting to the activation of the same event, each layer must have an event with the same name (see examples below).
 
+<a name="initialize"/></a>
 #### The `initialize` event
 ```
 {
@@ -204,6 +240,8 @@ Actions used in the `initialize` event are also special actions, as they are not
 
 The `initialize` event is optional and can be suppressed, you just need to add it in case you have to initialize things before running the other events.
 
+
+<a name="action"/></a>
 ### Action
 ```
 {
@@ -230,12 +268,15 @@ Actions will always have:
 
 Aside from this, it can also have a list of attributes that will define the behavior of the action (ex.: which position in the X axis should the image be translated to).
 
+<a name="actionlib"/></a>
 #### Action Libraries
 Each action has a name and a library. The idea is that the user should be able to import multiple libraries of actions inside a single project, even if actions have the same name across different libraries.
 
+<a name="whenfield"/></a>
 #### The `when` field
 Each action has a `when` field that will define when the action has to be executed. This field has to be expressed as a time expression (more below), assuming that time is 0 when the event is triggered.
 
+<a name="initializeaction"/></a>
 #### `initialize` actions
 ```
 {
@@ -251,6 +292,7 @@ As it happens with events, there are special types of actions for the `initializ
 
 While it is expected that the regular actions will execute actions interpolated across a given amount of time (more below), `initialize` actions will be executed imediately, right when the jao file is loaded (or when it is reset).
 
+<a name="initreset"/></a>
 # Initialization and Reset
 It is expected that the jao object will execute all of its initialize events before other events are triggered. When *exactly* it happens is up to the implementation. 
 
@@ -258,6 +300,7 @@ When an event is triggered, it is expected that a timer (or clock) will be attac
 - All actions inside the `initialize` event are executed.
 - The event clock will be reset to 0 (ex.: actions with `when` set to 0 will run again).
 
+<a name="probreset"/></a>
 ## Problems with Reset
 It is expected that for some workflows it will be inconvenient to execute the `initialize` event actions again when the object is reset. In such cases, it is advisable to add an attribute in the `dataType` that will define if the element is resetable:
 ```
@@ -270,6 +313,7 @@ It is expected that for some workflows it will be inconvenient to execute the `i
 ```
 The code of each action can look at this attribute and decide if it should reset or not when asked to do it so.
 
+<a name="timeexp"/></a>
 # Time Expressions
 Time-based fields are expected to suport time expressions:
 ```
@@ -297,6 +341,7 @@ Those expressions are provided as strings inside the JSON:
 
 Whether the implementation will support an specific type of time or not is up to the developer. At least `second` has to be supported.
 
+<a name="interpolation"/></a>
 # Interpolation parameters
 It is expected that actions will most times execute over a time period. For that reason, most actions may have an attribute `duration`. This is an example:
 ```
@@ -313,12 +358,15 @@ It is expected that actions will most times execute over a time period. For that
 ```
 Fields other than `when` that define time (like the `duration` in the example above) are expected to support time expressions as well.
 
+<a name="text"/></a>
 # Displaying text
 The jao specification does not define *how* you will be displaying text on the screen, but it is advisable that you support using labels to identify text layers so you can set text by referring to labels (the Java implementation does that).
 
+<a name="reatimeframebased"/></a>
 # Real-Time vs. Frame-Based
 The jao specification does not define if the implementation of the library is done using real-time (using threads, for example) or are frame-based (calling the render routine every cycle). Still, interms of *behavior*, it is expected that a *second means a second* when it runs. You can add frame-based timing to your implementation using time expressions that define duration in frames, but it is expected that you can define durations and start/end times as seconds of fractions/multiples of seconds.
 
+<a name="examples"/></a>
 # Examples
 Examples below are extracted from the Rushbeat standard skin and use the library implemented in Java.
 
@@ -777,6 +825,7 @@ You can have multiple layers just by adding on after the other inside the `layer
 }
 ```
 
+<a name="faq"/></a>
 # FAQ
 ### Why not YAML?
 Because then it would be called *yao*, which does not sound as good as *jao*.
@@ -790,6 +839,7 @@ While it is possible that the jao format can be used in a variety of situations 
 - If not, are you willing to implement?
 At this point there is only the Java implementation so if your use case is specific enough to use Java, it may be helpful.
 
+<a name="usecase"/></a>
 # Use Case: Rushbeat
 The main reason why that was developed for Rushbeat was the development of menus and UI components:
 - The menu has a lot of animation and eye candy which required tweaking. Being developed by a single person, time is a crucial resource -- the use of JAO and the JAO Visualizer has saved a lot of time with UI development;
