@@ -324,6 +324,7 @@ Examples below are extracted from the Rushbeat standard skin and use the library
 
 ## The structure of a jao file
 A standard jao file may look like this:
+
 ![image](https://user-images.githubusercontent.com/6846892/152470811-e19cb8dc-b772-41e0-ae3f-10e1bc19e3b8.png)
 
 Notice there is no specified hierarchy for the files -- everything you need is the `jao.json` at the root of the jao folder.
@@ -631,6 +632,150 @@ Here the `init` event will start the playback of the sample at `second 0` and wi
 }
 ```
 Keep in mind that some kinds of actions may need to have start and stop actions, as they may happen in parallel with the rest of the code (ex.: when playing a background song).
+
+## A file with multiple layers
+You can have multiple layers just by adding on after the other inside the `layers` list:
+```
+{
+    "layers": [
+        {
+            "dataType": {
+                "type": "sprite",
+                "attributes": {
+                    "path": "background.png"
+                }
+            },
+            "events": [
+                {
+                    "name": "initialize",
+                    "actions": [
+                        {
+                            "library": "jao.standards",
+                            "name": "Position",
+                            "attributes": {
+                                "position_x": "0",
+                                "position_y": "0"
+                            }
+                        },
+                        {
+                            "library": "jao.standards",
+                            "name": "Opacity",
+                            "attribute": "0"
+                        }
+                    ]
+                },
+                {
+                    "name": "init",
+                    "actions": [
+                        {
+                            "library": "jao.standards",
+                            "name": "FadeOverTime",
+                            "when": "second 0",
+                            "attributes": {
+                                "start_opacity": "0",
+                                "end_opacity": "1",
+                                "duration": "second 1"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "leave",
+                    "actions": [
+                        {
+                            "library": "jao.standards",
+                            "name": "FadeOverTime",
+                            "when": "second 0",
+                            "attributes": {
+                                "start_opacity": "1",
+                                "end_opacity": "0",
+                                "duration": "second 3"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "dataType": {
+                "type": "sprite",
+                "attributes": {
+                    "path": "overlay.png"
+                }
+            },
+            "events": [
+                {
+                    "name": "initialize",
+                    "actions": [
+                        {
+                            "library": "jao.standards",
+                            "name": "Position",
+                            "attributes": {
+                                "position_x": "0",
+                                "position_y": "0"
+                            }
+                        },
+                        {
+                            "library": "jao.standards",
+                            "name": "Opacity",
+                            "attribute": "0"
+                        }
+                    ]
+                },
+                {
+                    "name": "init",
+                    "actions": [
+                        {
+                            "library": "jao.standards",
+                            "name": "SetScale",
+                            "when": "second 0",
+                            "attributes": {
+                                "scale_x": "1.5",
+                                "scale_y": "1.5"
+                            }
+                        },
+                        {
+                            "library": "jao.standards",
+                            "name": "ScaleOverTime",
+                            "when": "second 0",
+                            "attributes": {
+                                "target_scale_x": "1",
+                                "target_scale_y": "1",
+                                "duration": "seconds 60"
+                            }
+                        },
+                        {
+                            "library": "jao.standards",
+                            "name": "FadeOverTime",
+                            "when": "second 0",
+                            "attributes": {
+                                "start_opacity": "0",
+                                "end_opacity": "1",
+                                "duration": "second 1"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "leave",
+                    "actions": [
+                        {
+                            "library": "jao.standards",
+                            "name": "FadeOverTime",
+                            "when": "second 0",
+                            "attributes": {
+                                "start_opacity": "1",
+                                "end_opacity": "0",
+                                "duration": "second 3"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+```
 
 # FAQ
 ### Why not YAML?
