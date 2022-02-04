@@ -71,6 +71,31 @@ You can see above a brief example of what a `jao.json` looks like.
 
 ## Layers
 The jao file is organized in layers. Each layer is some kind of element in your animation (ex.: a `.png` image). You can have zero or more layers in your jao file.
+```
+"layers": [
+   {
+      "dataType": {
+         "type": "...",
+         "attributes": {
+            "sampleAttr": "...",
+            ...
+         }
+      },
+      "events": [
+         {
+            "name": "initialize",
+            "actions": [
+               "library": "...",
+               "name": "...",
+               ...
+            ]
+         },
+         ...
+      ]
+   },
+   ...
+]
+```
 
 ## Layer
 The layer is this object inside the `"layers"` list:
@@ -109,12 +134,12 @@ A layer is composed by a data type specification and a list of events. Layers ar
 }
 ```
 
-Each layer inside the list of layers has to represent a data file. An example is an image (like a `.png` file), but that can be anything: images, sounds and even pure event-control layers. This is up to the implementation library to define.
+Each layer inside the list of layers has to represent soem kind of entity. An example is an image (like a `.png` file), but that can be anything: images, sounds and even pure event-control layers. This is up to the implementation library to define.
 
-Also, a data type specification can carry a list of attributes to define the overall behavior of a data type. For example, if you data type is something that carries an image (like a `sprite` or `animation`), you may want an attribute to define the file path of the file to be used (see examples below). The defition of attributes is up to the implementation, there is no standard or specification about it.
+Also, a data type specification can carry a list of attributes to define the overall behavior of a data type. For example, if your data type is something that carries an image (like a `sprite` or `animation`), you may want an attribute to define the file path of the file to be used (see examples below). The defition of attributes is up to the implementation, there is no standard or specification about it.
 
 ### Events
-Each layer carries a list of events and it can have zero or more events in this list.
+Each layer carries a list of events, it can have zero or more events in this list.
 ```
 "events": [
    {
@@ -125,6 +150,26 @@ Each layer carries a list of events and it can have zero or more events in this 
          ...
       ]
    },
+   {
+      "name": "select",
+      "actions": [
+         "library": "...",
+         "name": "...",
+         "when"
+      ]
+   },
    ...
 ]
 ```
+
+### Event
+An event defines the behaviour of this layer when a given event starts. Imagine a menu option:
+- It will have an event called `select`, that may trigger the animations to show the UI component selected in the screen, like a highlight;
+- It will have an event called `unselect`, that may trigger the animations to remove the highlight from the UI component.
+
+The event will describe *what* happens when this event is triggered, which is a list of actions. An event can have zero or more actions.
+
+As each layer has a list of events, if you want to have multiple layers reacting to the activation of the same event, each layer must have an event with the same name (see examples below).
+
+#### The 'initialize' event
+Events can have any name, except by `initialize`. This is a reserved event name for the initialization of the layer. You may want to define attributes of the layer when it is initialized -- ex.: set the opacity of a layer to 0 in a layer that will fade into the screen. For those cases you will want to use actions inside the `initialize` event to setup the initial state of the layer.
