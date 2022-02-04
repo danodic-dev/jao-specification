@@ -839,6 +839,9 @@ While it is possible that the jao format can be used in a variety of situations 
 - If not, are you willing to implement?
 At this point there is only the Java implementation so if your use case is specific enough to use Java, it may be helpful.
 
+### Is there a visual editor?
+Not as of now, but it would be nice to have. For rushbeat a preview tool has been created, it helps building the screen layers, organizing the positioning of the jao files and testing the events. It is not production-ready and is very fiddly. Still, having a graphical editor would be great.
+
 <a name="usecase"/></a>
 # Use Case: Rushbeat
 The main reason why that was developed for Rushbeat was the development of menus and UI components:
