@@ -68,3 +68,63 @@ The file `jao.json` will be a plain JSON file, following this format (schema to 
 }
 ```
 You can see above a brief example of what a `jao.json` looks like.
+
+## Layers
+The jao file is organized in layers. Each layer is some kind of element in your animation (ex.: a `.png` image). You can have zero or more layers in your jao file.
+
+## Layer
+The layer is this object inside the `"layers"` list:
+```
+{
+   "dataType": {
+      "type": "...",
+      "attributes": {
+         "sampleAttr": "...",
+         ...
+      }
+   },
+   "events": [
+      {
+         "name": "initialize",
+         "actions": [
+            "library": "...",
+            "name": "...",
+            ...
+         ]
+      },
+      ...
+   ]
+}
+```
+A layer is composed by a data type specification and a list of events. Layers are rendered from the first (bottom) to the last (top).
+
+### Data Type Specification
+```
+"dataType": {
+   "type": "...",
+   "attributes": {
+      "sampleAttr": "...",
+      ...
+   }
+}
+```
+
+Each layer inside the list of layers has to represent a data file. An example is an image (like a `.png` file), but that can be anything: images, sounds and even pure event-control layers. This is up to the implementation library to define.
+
+Also, a data type specification can carry a list of attributes to define the overall behavior of a data type. For example, if you data type is something that carries an image (like a `sprite` or `animation`), you may want an attribute to define the file path of the file to be used (see examples below). The defition of attributes is up to the implementation, there is no standard or specification about it.
+
+### Events
+Each layer carries a list of events and it can have zero or more events in this list.
+```
+"events": [
+   {
+      "name": "initialize",
+      "actions": [
+         "library": "...",
+         "name": "...",
+         ...
+      ]
+   },
+   ...
+]
+```
