@@ -333,7 +333,7 @@ Notice there is no specified hierarchy for the files -- everything you need is t
 This is the most basic real world example, a background image that fades into the screen over the time of one second:
 ```
 [
-   "layer": {
+   "layers": {
       {
          "dataType": {
              "type": "sprite",
